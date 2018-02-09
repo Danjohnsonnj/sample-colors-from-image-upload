@@ -20,3 +20,11 @@ form {
   flex: none;
   width: 100%;
 }
+
+canvas.sampler {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  visibility: hidden;
+}
