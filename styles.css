@@ -1,0 +1,22 @@
+.preview img {
+  max-width: 20vw;
+  max-height: 20vh;
+}
+
+form {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.upload {
+  flex: 1 1 auto;
+}
+
+.preview {
+  flex: none;
+}
+
+.submit {
+  flex: none;
+  width: 100%;
+}
