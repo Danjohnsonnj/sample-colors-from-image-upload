@@ -19,13 +19,36 @@ class Sampler {
     ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
   }
 
-  drawImage(img) {
+  drawImageToCanvas(img) {
     this.clearCanvas()
     this.canvas.width = img.naturalWidth
     this.canvas.height = img.naturalHeight
-    const ctx = this.canvas.getContext('2d')
-    ctx.drawImage(img, 0, 0);
-    console.log(img)
+    this.ctx = this.canvas.getContext('2d')
+    this.ctx.drawImage(img, 0, 0)
+  }
+
+  getColorDataAtPoint(x, y) {
+    const imageData = this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height)
+    const red = y * (this.canvas.width * 4) + x * 4
+    const [redIndex, greenIndex, blueIndex, alphaIndex] = [red, red + 1, red + 2, red + 3]
+    return [imageData.data[redIndex], imageData.data[greenIndex], imageData.data[blueIndex], imageData.data[alphaIndex]]
+  }
+
+  getColorPoints(img) {
+    this.drawImageToCanvas(img)
+    const colors = {}
+    const width = this.canvas.width - 1
+    const height = this.canvas.height - 1
+    colors.tl = this.getColorDataAtPoint(0, 0)
+    colors.tc = this.getColorDataAtPoint(Math.floor(width / 2), 0)
+    colors.tr = this.getColorDataAtPoint(width, 0)
+    colors.ml = this.getColorDataAtPoint(0, Math.floor(height / 2))
+    colors.mc = this.getColorDataAtPoint(Math.floor(width / 2), Math.floor(height / 2))
+    colors.mr = this.getColorDataAtPoint(width, Math.floor(height / 2))
+    colors.bl = this.getColorDataAtPoint(0, height - 1)
+    colors.bc = this.getColorDataAtPoint(Math.floor(width / 2), height - 1)
+    colors.br = this.getColorDataAtPoint(width, height - 1)
+    return colors
   }
 }
 
@@ -75,7 +98,7 @@ class ImagePreview {
           para.textContent = `File name ${curFiles[i].name}, file size ${this.returnFileSize(curFiles[i].size)}.`
           image = document.createElement('img')
           image.addEventListener('load', () => {
-            this.sampler.drawImage(image)
+            console.log(this.sampler.getColorPoints(image))
           })
           image.src = window.URL.createObjectURL(curFiles[i])
 
@@ -102,5 +125,5 @@ class ImagePreview {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  const previewer = new ImagePreview()
+  window.previewer = new ImagePreview()
 })
