@@ -1,6 +1,6 @@
 .preview img {
-  max-width: 20vw;
-  max-height: 20vh;
+  max-width: 100%;
+  max-height: 100%;
 }
 
 form {
@@ -9,16 +9,18 @@ form {
 }
 
 .upload {
-  flex: 1 1 auto;
+  width: 100%;
+  flex: none;
 }
 
 .preview {
-  flex: none;
+  max-height: 90vh;
+  flex: 0 0 50%;
 }
 
 .swatches {
-  flex: none;
-  width: 100%;
+  max-height: 90vh;
+  flex: 0 0 50%;
   display: flex;
 }
 

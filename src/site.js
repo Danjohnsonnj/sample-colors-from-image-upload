@@ -27,10 +27,12 @@ class Sampler {
   }
 
   getColorDataAtPoint(x, y) {
-    const imageData = this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height)
     const red = y * (this.canvas.width * 4) + x * 4
     const [redIndex, greenIndex, blueIndex, alphaIndex] = [red, red + 1, red + 2, red + 3]
-    return [imageData.data[redIndex], imageData.data[greenIndex], imageData.data[blueIndex], imageData.data[alphaIndex]]
+    return [this.imageData.data[redIndex],
+      this.imageData.data[greenIndex],
+      this.imageData.data[blueIndex],
+      this.imageData.data[alphaIndex]]
   }
 
   getColorPoints(img) {
@@ -38,6 +40,7 @@ class Sampler {
     const colors = {}
     const width = this.canvas.width - 1
     const height = this.canvas.height - 1
+    this.imageData = this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height)
     colors.tl = this.getColorDataAtPoint(0, 0)
     colors.tc = this.getColorDataAtPoint(Math.floor(width / 2), 0)
     colors.tr = this.getColorDataAtPoint(width, 0)
@@ -48,6 +51,10 @@ class Sampler {
     colors.bc = this.getColorDataAtPoint(Math.floor(width / 2), height - 1)
     colors.br = this.getColorDataAtPoint(width, height - 1)
     return colors
+  }
+
+  getImageRatio() {
+    return this.canvas.height / this.canvas.width
   }
 }
 
@@ -87,35 +94,24 @@ class ImagePreview {
     }
     var curFile = this.input.files[0]
     let image = null
-    if (!curFile) {
-      var para = document.createElement('p')
-      para.textContent = 'No files currently selected for upload'
-      this.preview.appendChild(para)
-    } else {
-      var para = document.createElement('p')
-      if (this.validFileType(curFile)) {
-        para.textContent = `File name ${curFile.name}, file size ${this.returnFileSize(curFile.size)}.`
-        image = document.createElement('img')
-        image.addEventListener('load', this.showSwatches.bind(this, image))
-        image.src = window.URL.createObjectURL(curFile)
+    if (this.validFileType(curFile)) {
+      image = document.createElement('img')
+      image.addEventListener('load', this.showSwatches.bind(this, image))
+      image.src = window.URL.createObjectURL(curFile)
 
-        this.preview.appendChild(image)
-        this.preview.appendChild(para)
-
-      } else {
-        para.textContent = `File name ${curFile.name}: Not a valid file type. Update your selection.`
-        this.preview.appendChild(para)
-      }
+      this.preview.appendChild(image)
     }
   }
 
   showSwatches(image) {
     const colors = this.sampler.getColorPoints(image)
+    const imageRatio = this.sampler.getImageRatio()
     const wrap = document.createElement('div')
     for (let c in colors) {
       const tile = document.createElement('div')
       tile.classList.add('tile')
       tile.style.backgroundColor = `rgba(${colors[c][0]}, ${colors[c][1]}, ${colors[c][2]}, ${colors[c][3]})`
+      tile.style.paddingBottom = `calc(33% * ${imageRatio})`
       wrap.appendChild(tile)
     }
     this.swatchWrapper.appendChild(wrap)
