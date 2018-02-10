@@ -1,3 +1,5 @@
+import chroma from 'chroma-js'
+
 class Sampler {
   constructor() {
     this.canvas = this.getCleanCanvas()
@@ -26,31 +28,41 @@ class Sampler {
     this.ctx.drawImage(img, 0, 0)
   }
 
-  getColorDataAtPoint(x, y) {
-    const red = y * (this.canvas.width * 4) + x * 4
+  getColorDataAtPoint(x, y, imageData) {
+    const red = y * (imageData.width * 4) + x * 4
     const [redIndex, greenIndex, blueIndex, alphaIndex] = [red, red + 1, red + 2, red + 3]
-    return [this.imageData.data[redIndex],
-      this.imageData.data[greenIndex],
-      this.imageData.data[blueIndex],
-      this.imageData.data[alphaIndex]]
+    return [imageData.data[redIndex],
+      imageData.data[greenIndex],
+      imageData.data[blueIndex],
+      imageData.data[alphaIndex] / 255]
   }
 
-  getColorPoints(img) {
-    this.drawImageToCanvas(img)
-    const width = this.canvas.width - 1
-    const height = this.canvas.height - 1
-    this.imageData = this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height)
-    return [
-      this.getColorDataAtPoint(0, 0),
-      this.getColorDataAtPoint(Math.floor(width / 2), 0),
-      this.getColorDataAtPoint(width, 0),
-      this.getColorDataAtPoint(0, Math.floor(height / 2)),
-      this.getColorDataAtPoint(Math.floor(width / 2), Math.floor(height / 2)),
-      this.getColorDataAtPoint(width, Math.floor(height / 2)),
-      this.getColorDataAtPoint(0, height - 1),
-      this.getColorDataAtPoint(Math.floor(width / 2), height - 1),
-      this.getColorDataAtPoint(width, height - 1)
-    ]
+  getColorAverage(x, y) {
+    const width = 10
+    const height = 10
+
+    if (x - width / 2 < 0) {
+      x += width / 2
+    } else if (x + width / 2 > this.canvas.width) {
+      x -= width / 2
+    }
+
+    if (y - height / 2 < 0) {
+      y += height / 2
+    } else if (y + height / 2 > this.canvas.height) {
+      y -= height / 2
+    }
+
+    x -= width / 2
+    y -= height / 2
+    const imageData = this.ctx.getImageData(x, y, x + width, y + height)
+    const colors = []
+    for (let h = 0; h < height; h++) {
+      for (let w = 0; w < width; w++) {
+        colors.push(this.getColorDataAtPoint(w, h, imageData))
+      }
+    }
+    return chroma.average(colors).css()
   }
 
   getImageRatio() {
@@ -96,7 +108,10 @@ class ImagePreview {
     let image = null
     if (this.validFileType(curFile)) {
       image = document.createElement('img')
-      image.addEventListener('load', this.showSwatches.bind(this, image))
+      image.addEventListener('load', () => {
+        this.sampler.drawImageToCanvas(image)
+        this.showSwatches(image)
+      })
       image.src = window.URL.createObjectURL(curFile)
 
       this.preview.appendChild(image)
@@ -104,13 +119,25 @@ class ImagePreview {
   }
 
   showSwatches(image) {
-    const colors = this.sampler.getColorPoints(image)
+    const width = this.sampler.canvas.width - 1
+    const height = this.sampler.canvas.height - 1
+    const colors = [
+      this.sampler.getColorAverage(0, 0),
+      this.sampler.getColorAverage(Math.floor(width / 2), 0),
+      this.sampler.getColorAverage(width, 0),
+      this.sampler.getColorAverage(0, Math.floor(height / 2)),
+      this.sampler.getColorAverage(Math.floor(width / 2), Math.floor(height / 2)),
+      this.sampler.getColorAverage(width, Math.floor(height / 2)),
+      this.sampler.getColorAverage(0, height - 1),
+      this.sampler.getColorAverage(Math.floor(width / 2), height - 1),
+      this.sampler.getColorAverage(width, height - 1)
+    ]
     const imageRatio = this.sampler.getImageRatio()
     const wrap = document.createElement('div')
     colors.forEach((c) => {
       const tile = document.createElement('div')
       tile.classList.add('tile')
-      tile.style.backgroundColor = `rgba(${c[0]}, ${c[1]}, ${c[2]}, ${c[3]})`
+      tile.style.backgroundColor = c
       tile.style.paddingBottom = `calc(33% * ${imageRatio})`
       wrap.appendChild(tile)
     })
