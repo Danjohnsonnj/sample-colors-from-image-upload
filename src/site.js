@@ -41,20 +41,10 @@ class Sampler {
     const width = 50
     const height = 50
 
-    if (x - width / 2 < 0) {
-      x += width / 2
-    } else if (x + width / 2 > this.canvas.width) {
-      x -= width / 2
-    }
+    x = Math.min(Math.max(0, x - width / 2), this.canvas.width - 1 - width)
+    y = Math.min(Math.max(0, y - height / 2), this.canvas.height - 1 - height)
+    console.log(x, y, x + width, y + height)
 
-    if (y - height / 2 < 0) {
-      y += height / 2
-    } else if (y + height / 2 > this.canvas.height) {
-      y -= height / 2
-    }
-
-    x -= width / 2
-    y -= height / 2
     const imageData = this.ctx.getImageData(x, y, x + width, y + height)
     const colors = []
     for (let h = 0; h < height; h++) {
@@ -122,6 +112,7 @@ class ImagePreview {
   showSwatches(image) {
     const width = this.sampler.canvas.width - 1
     const height = this.sampler.canvas.height - 1
+    console.log(width, height)
     const colors = [
       this.sampler.getColorAverage(0, 0),
       this.sampler.getColorAverage(Math.floor(width / 2), 0),
