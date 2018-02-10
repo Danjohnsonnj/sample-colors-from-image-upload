@@ -1,9 +1,10 @@
 import chroma from 'chroma-js'
 
 class Sampler {
-  constructor() {
+  constructor(sampleSize = 50) {
     this.canvas = this.getCleanCanvas()
     this.ctx = this.canvas.getContext('2d')
+    this.sampleSize = sampleSize
   }
 
   getCleanCanvas() {
@@ -38,8 +39,8 @@ class Sampler {
   }
 
   getColorAverage(x, y) {
-    const width = 50
-    const height = 50
+    const width = this.sampleSize
+    const height = this.sampleSize
 
     x = Math.min(Math.max(0, x - width / 2), this.canvas.width - 1 - width)
     y = Math.min(Math.max(0, y - height / 2), this.canvas.height - 1 - height)
@@ -61,10 +62,19 @@ class Sampler {
 }
 
 class ImagePreview {
-  constructor(input = document.querySelector('input'), preview = document.querySelector('.preview'), swatches = document.querySelector('.swatches')) {
-    this.input = input
-    this.preview = preview
-    this.swatchWrapper = swatches
+  constructor(config) {
+    const mergedConfig = Object.assign({
+      input: document.querySelector('input'),
+      preview: document.querySelector('.preview'),
+      swatches: document.querySelector('.swatches'),
+      samples: 3,
+      sampleSize: 50
+    }, config)
+    this.input = mergedConfig.input
+    this.preview = mergedConfig.preview
+    this.swatchWrapper = mergedConfig.swatches
+    this.samples = mergedConfig.samples
+    this.sampleSize = mergedConfig.sampleSize
     this.fileTypes = [
       'image/jpeg',
       'image/pjpeg',
@@ -73,7 +83,7 @@ class ImagePreview {
 
     // input.style.opacity = 0
     this.bindListeners()
-    this.sampler = new Sampler()
+    this.sampler = new Sampler(this.sampleSize)
   }
 
   bindListeners() {
@@ -116,24 +126,25 @@ class ImagePreview {
     const width = this.sampler.canvas.width - 1
     const height = this.sampler.canvas.height - 1
     console.log(width, height)
-    const colors = [
-      this.sampler.getColorAverage(0, 0),
-      this.sampler.getColorAverage(Math.floor(width / 2), 0),
-      this.sampler.getColorAverage(width, 0),
-      this.sampler.getColorAverage(0, Math.floor(height / 2)),
-      this.sampler.getColorAverage(Math.floor(width / 2), Math.floor(height / 2)),
-      this.sampler.getColorAverage(width, Math.floor(height / 2)),
-      this.sampler.getColorAverage(0, height - 1),
-      this.sampler.getColorAverage(Math.floor(width / 2), height - 1),
-      this.sampler.getColorAverage(width, height - 1)
-    ]
+    const colors = []
+    const length = this.samples - 1
+    for (let h = 0; h <= length; h++) {
+      for (let w = 0; w <= length; w++) {
+        colors.push(this.sampler.getColorAverage(
+          Math.floor(width * w / (this.samples - 1)),
+          Math.floor(height * h / (this.samples - 1))
+        ))
+      }
+    }
+
     const imageRatio = this.sampler.getImageRatio()
     const wrap = document.createElement('div')
     colors.forEach((c) => {
       const tile = document.createElement('div')
       tile.classList.add('tile')
       tile.style.backgroundColor = c
-      tile.style.paddingBottom = `calc(33% * ${imageRatio})`
+      tile.style.flexBasis = `${100 / this.samples}%`
+      tile.style.paddingBottom = `calc(${100 / this.samples}% * ${imageRatio})`
       wrap.appendChild(tile)
     })
     this.swatchWrapper.appendChild(wrap)
@@ -151,5 +162,5 @@ class ImagePreview {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  window.previewer = new ImagePreview()
+  window.previewer = new ImagePreview({ samples: 5, sampleSize: 100 })
 })
