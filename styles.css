@@ -16,9 +16,21 @@ form {
   flex: none;
 }
 
-.submit {
+.swatches {
   flex: none;
   width: 100%;
+  display: flex;
+}
+
+.swatches > div {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.swatches .tile {
+  flex: 1 1 33%;
+  padding-bottom: 33%;
 }
 
 canvas.sampler {

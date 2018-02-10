@@ -1,6 +1,7 @@
 class Sampler {
   constructor() {
     this.canvas = this.getCleanCanvas()
+    this.ctx = this.canvas.getContext('2d')
   }
 
   getCleanCanvas() {
@@ -15,15 +16,13 @@ class Sampler {
   }
 
   clearCanvas() {
-    const ctx = this.canvas.getContext('2d');
-    ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
   }
 
   drawImageToCanvas(img) {
     this.clearCanvas()
     this.canvas.width = img.naturalWidth
     this.canvas.height = img.naturalHeight
-    this.ctx = this.canvas.getContext('2d')
     this.ctx.drawImage(img, 0, 0)
   }
 
@@ -53,9 +52,10 @@ class Sampler {
 }
 
 class ImagePreview {
-  constructor(input = document.querySelector('input'), preview = document.querySelector('.preview')) {
+  constructor(input = document.querySelector('input'), preview = document.querySelector('.preview'), swatches = document.querySelector('.swatches')) {
     this.input = input
     this.preview = preview
+    this.swatchWrapper = swatches
     this.fileTypes = [
       'image/jpeg',
       'image/pjpeg',
@@ -85,32 +85,40 @@ class ImagePreview {
     while (this.preview.firstChild) {
       this.preview.removeChild(this.preview.firstChild);
     }
-    var curFiles = this.input.files
+    var curFile = this.input.files[0]
     let image = null
-    if (curFiles.length === 0) {
+    if (!curFile) {
       var para = document.createElement('p')
       para.textContent = 'No files currently selected for upload'
       this.preview.appendChild(para)
     } else {
       var para = document.createElement('p')
-      for (var i = 0; i < curFiles.length; i++) {
-        if (this.validFileType(curFiles[i])) {
-          para.textContent = `File name ${curFiles[i].name}, file size ${this.returnFileSize(curFiles[i].size)}.`
-          image = document.createElement('img')
-          image.addEventListener('load', () => {
-            console.log(this.sampler.getColorPoints(image))
-          })
-          image.src = window.URL.createObjectURL(curFiles[i])
+      if (this.validFileType(curFile)) {
+        para.textContent = `File name ${curFile.name}, file size ${this.returnFileSize(curFile.size)}.`
+        image = document.createElement('img')
+        image.addEventListener('load', this.showSwatches.bind(this, image))
+        image.src = window.URL.createObjectURL(curFile)
 
-          this.preview.appendChild(image)
-          this.preview.appendChild(para)
+        this.preview.appendChild(image)
+        this.preview.appendChild(para)
 
-        } else {
-          para.textContent = `File name ${curFiles[i].name}: Not a valid file type. Update your selection.`
-          this.preview.appendChild(para)
-        }
+      } else {
+        para.textContent = `File name ${curFile.name}: Not a valid file type. Update your selection.`
+        this.preview.appendChild(para)
       }
     }
+  }
+
+  showSwatches(image) {
+    const colors = this.sampler.getColorPoints(image)
+    const wrap = document.createElement('div')
+    for (let c in colors) {
+      const tile = document.createElement('div')
+      tile.classList.add('tile')
+      tile.style.backgroundColor = `rgba(${colors[c][0]}, ${colors[c][1]}, ${colors[c][2]}, ${colors[c][3]})`
+      wrap.appendChild(tile)
+    }
+    this.swatchWrapper.appendChild(wrap)
   }
 
   returnFileSize(number) {
