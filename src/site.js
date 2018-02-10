@@ -37,20 +37,20 @@ class Sampler {
 
   getColorPoints(img) {
     this.drawImageToCanvas(img)
-    const colors = {}
     const width = this.canvas.width - 1
     const height = this.canvas.height - 1
     this.imageData = this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height)
-    colors.tl = this.getColorDataAtPoint(0, 0)
-    colors.tc = this.getColorDataAtPoint(Math.floor(width / 2), 0)
-    colors.tr = this.getColorDataAtPoint(width, 0)
-    colors.ml = this.getColorDataAtPoint(0, Math.floor(height / 2))
-    colors.mc = this.getColorDataAtPoint(Math.floor(width / 2), Math.floor(height / 2))
-    colors.mr = this.getColorDataAtPoint(width, Math.floor(height / 2))
-    colors.bl = this.getColorDataAtPoint(0, height - 1)
-    colors.bc = this.getColorDataAtPoint(Math.floor(width / 2), height - 1)
-    colors.br = this.getColorDataAtPoint(width, height - 1)
-    return colors
+    return [
+      this.getColorDataAtPoint(0, 0),
+      this.getColorDataAtPoint(Math.floor(width / 2), 0),
+      this.getColorDataAtPoint(width, 0),
+      this.getColorDataAtPoint(0, Math.floor(height / 2)),
+      this.getColorDataAtPoint(Math.floor(width / 2), Math.floor(height / 2)),
+      this.getColorDataAtPoint(width, Math.floor(height / 2)),
+      this.getColorDataAtPoint(0, height - 1),
+      this.getColorDataAtPoint(Math.floor(width / 2), height - 1),
+      this.getColorDataAtPoint(width, height - 1)
+    ]
   }
 
   getImageRatio() {
@@ -107,13 +107,13 @@ class ImagePreview {
     const colors = this.sampler.getColorPoints(image)
     const imageRatio = this.sampler.getImageRatio()
     const wrap = document.createElement('div')
-    for (let c in colors) {
+    colors.forEach((c) => {
       const tile = document.createElement('div')
       tile.classList.add('tile')
-      tile.style.backgroundColor = `rgba(${colors[c][0]}, ${colors[c][1]}, ${colors[c][2]}, ${colors[c][3]})`
+      tile.style.backgroundColor = `rgba(${c[0]}, ${c[1]}, ${c[2]}, ${c[3]})`
       tile.style.paddingBottom = `calc(33% * ${imageRatio})`
       wrap.appendChild(tile)
-    }
+    })
     this.swatchWrapper.appendChild(wrap)
   }
 
