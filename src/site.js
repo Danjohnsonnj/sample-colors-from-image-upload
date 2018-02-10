@@ -22,7 +22,7 @@ class Sampler {
   }
 
   drawImageToCanvas(img) {
-    this.clearCanvas()
+    this.getCleanCanvas()
     this.canvas.width = img.naturalWidth
     this.canvas.height = img.naturalHeight
     this.ctx.drawImage(img, 0, 0)
@@ -38,8 +38,8 @@ class Sampler {
   }
 
   getColorAverage(x, y) {
-    const width = 10
-    const height = 10
+    const width = 50
+    const height = 50
 
     if (x - width / 2 < 0) {
       x += width / 2
@@ -104,6 +104,7 @@ class ImagePreview {
     while (this.preview.firstChild) {
       this.preview.removeChild(this.preview.firstChild);
     }
+    this.swatchWrapper.innerHTML = ''
     var curFile = this.input.files[0]
     let image = null
     if (this.validFileType(curFile)) {
