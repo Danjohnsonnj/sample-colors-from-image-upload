@@ -78,6 +78,9 @@ class ImagePreview {
 
   bindListeners() {
     this.input.addEventListener('change', this.updateImageDisplay.bind(this))
+    this.swatchWrapper.addEventListener('click', evt => {
+      evt.currentTarget.classList.toggle('over')
+    })
   }
 
   validFileType(file) {
