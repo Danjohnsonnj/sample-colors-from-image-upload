@@ -1,7 +1,11 @@
 import chroma from 'chroma-js'
 
+const DEFAULTS = {
+  samples: 5, sampleSize: 50
+}
+
 class Sampler {
-  constructor(sampleSize = 50, samples = 3) {
+  constructor(sampleSize = DEFAULTS.sampleSize, samples = DEFAULTS.samples) {
     this.canvas = this.getCleanCanvas()
     this.ctx = this.canvas.getContext('2d')
     this.sampleSize = sampleSize
@@ -68,6 +72,7 @@ class Sampler {
 
 class ImagePreview {
   constructor(config) {
+    this.sampler = new Sampler()
     const mergedConfig = Object.assign({
       input: document.querySelector('input'),
       preview: document.querySelector('.preview'),
@@ -90,7 +95,6 @@ class ImagePreview {
 
     // input.style.opacity = 0
     this.bindListeners()
-    this.sampler = new Sampler(this.sampleSize)
   }
 
   bindListeners() {
@@ -133,12 +137,12 @@ class ImagePreview {
     const width = this.sampler.canvas.width - 1
     const height = this.sampler.canvas.height - 1
     const colors = []
-    const length = this.samples - 1
+    const length = this._samples - 1
     for (let h = 0; h <= length; h++) {
       for (let w = 0; w <= length; w++) {
         colors.push(this.sampler.getColorAverage(
-          Math.floor(width * w / (this.samples - 1)),
-          Math.floor(height * h / (this.samples - 1))
+          Math.floor(width * w / (this._samples - 1)),
+          Math.floor(height * h / (this._samples - 1))
         ))
       }
     }
@@ -149,8 +153,8 @@ class ImagePreview {
       const tile = document.createElement('div')
       tile.classList.add('tile')
       tile.style.backgroundColor = c
-      tile.style.flexBasis = `${100 / this.samples}%`
-      tile.style.paddingBottom = `calc(${100 / this.samples}% * ${imageRatio})`
+      tile.style.flexBasis = `${100 / this._samples}%`
+      tile.style.paddingBottom = `calc(${100 / this._samples}% * ${imageRatio})`
       wrap.appendChild(tile)
     })
     this.swatchWrapper.appendChild(wrap)
@@ -165,8 +169,21 @@ class ImagePreview {
       return (number / 1048576).toFixed(1) + 'MB';
     }
   }
+
+  set samples(num) {
+    if (this.sampler) {
+      this.sampler.samples = num
+    }
+    this._samples = num
+  }
+
+  set sampleSize(num) {
+    if (this.sampler) {
+      this.sampler.sampleSize = num
+    }
+  }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  window.previewer = new ImagePreview({ samples: 5, sampleSize: 50 })
+  window.previewer = new ImagePreview({ samples: DEFAULTS.samples, sampleSize: DEFAULTS.sampleSize })
 })
