@@ -1,10 +1,11 @@
 import chroma from 'chroma-js'
 
 class Sampler {
-  constructor(sampleSize = 50) {
+  constructor(sampleSize = 50, samples = 3) {
     this.canvas = this.getCleanCanvas()
     this.ctx = this.canvas.getContext('2d')
     this.sampleSize = sampleSize
+    this.samples = samples
   }
 
   getCleanCanvas() {
@@ -24,9 +25,14 @@ class Sampler {
 
   drawImageToCanvas(img) {
     this.getCleanCanvas()
-    this.canvas.width = img.naturalWidth
-    this.canvas.height = img.naturalHeight
-    this.ctx.drawImage(img, 0, 0)
+    this.canvas.width = 1000
+    this.canvas.height = 1000 * img.naturalHeight / img.naturalWidth
+    this.sampleSize = Math.min(
+      this.sampleSize,
+      Math.floor(this.canvas.width / this.samples),
+      Math.floor(this.canvas.height / this.samples)
+    )
+    this.ctx.drawImage(img, 0, 0, this.canvas.width, this.canvas.height)
   }
 
   getColorDataAtPoint(x, y, imageData) {
@@ -44,7 +50,6 @@ class Sampler {
 
     x = Math.min(Math.max(0, x - width / 2), this.canvas.width - 1 - width)
     y = Math.min(Math.max(0, y - height / 2), this.canvas.height - 1 - height)
-    console.log(x, y, x + width, y + height)
 
     const imageData = this.ctx.getImageData(x, y, x + width, y + height)
     const colors = []
@@ -67,12 +72,14 @@ class ImagePreview {
       input: document.querySelector('input'),
       preview: document.querySelector('.preview'),
       swatches: document.querySelector('.swatches'),
+      progress: document.querySelector('.progress'),
       samples: 3,
       sampleSize: 50
     }, config)
     this.input = mergedConfig.input
     this.preview = mergedConfig.preview
     this.swatchWrapper = mergedConfig.swatches
+    this.progress = mergedConfig.progress
     this.samples = mergedConfig.samples
     this.sampleSize = mergedConfig.sampleSize
     this.fileTypes = [
@@ -125,7 +132,6 @@ class ImagePreview {
   showSwatches(image) {
     const width = this.sampler.canvas.width - 1
     const height = this.sampler.canvas.height - 1
-    console.log(width, height)
     const colors = []
     const length = this.samples - 1
     for (let h = 0; h <= length; h++) {
@@ -162,5 +168,5 @@ class ImagePreview {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  window.previewer = new ImagePreview({ samples: 5, sampleSize: 100 })
+  window.previewer = new ImagePreview({ samples: 5, sampleSize: 50 })
 })
