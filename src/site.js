@@ -93,7 +93,6 @@ class ImagePreview {
       'image/png'
     ]
 
-    // input.style.opacity = 0
     this.bindListeners()
   }
 
