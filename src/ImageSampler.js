@@ -1,5 +1,6 @@
 import DEFAULTS from './defaults.js'
 import chroma from 'chroma-js'
+window.chroma = chroma
 
 class Sampler {
   constructor(sampleSize = DEFAULTS.sampleSize, samples = DEFAULTS.samples) {
@@ -46,7 +47,7 @@ class Sampler {
     ]
   }
 
-  getColorAverage(x, y) {
+  getSampleAverageColor(x, y) {
     const width = this.sampleSize
     const height = this.sampleSize
 
@@ -59,6 +60,13 @@ class Sampler {
       for (let w = 0; w < width; w++) {
         colors.push(this.getColorDataAtPoint(w, h, imageData))
       }
+    }
+    return chroma.average(colors).css()
+  }
+
+  getAverageOfColors(colors = []) {
+    if (colors.length < 1) {
+      return null
     }
     return chroma.average(colors).css()
   }

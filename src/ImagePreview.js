@@ -69,13 +69,14 @@ class ImagePreview {
     const length = this._samples - 1
     for (let h = 0; h <= length; h++) {
       for (let w = 0; w <= length; w++) {
-        colors.push(this.sampler.getColorAverage(
+        colors.push(this.sampler.getSampleAverageColor(
           Math.floor(width * w / (this._samples - 1)),
           Math.floor(height * h / (this._samples - 1))
         ))
       }
     }
 
+    this.swatchWrapper.style.backgroundColor = this.sampler.getAverageOfColors(colors)
     const imageRatio = this.sampler.getImageRatio()
     const wrap = document.createElement('div')
     colors.forEach((c) => {

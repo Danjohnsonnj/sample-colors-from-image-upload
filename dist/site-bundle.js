@@ -74,7 +74,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = {
-  samples: 5, sampleSize: 50
+  samples: 3, sampleSize: 50
 };
 
 /***/ }),
@@ -229,10 +229,11 @@ var ImagePreview = function () {
       var length = this._samples - 1;
       for (var h = 0; h <= length; h++) {
         for (var w = 0; w <= length; w++) {
-          colors.push(this.sampler.getColorAverage(Math.floor(width * w / (this._samples - 1)), Math.floor(height * h / (this._samples - 1))));
+          colors.push(this.sampler.getSampleAverageColor(Math.floor(width * w / (this._samples - 1)), Math.floor(height * h / (this._samples - 1))));
         }
       }
 
+      this.swatchWrapper.style.backgroundColor = this.sampler.getAverageOfColors(colors);
       var imageRatio = this.sampler.getImageRatio();
       var wrap = document.createElement('div');
       colors.forEach(function (c) {
@@ -303,6 +304,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+window.chroma = _chromaJs2.default;
+
 var Sampler = function () {
   function Sampler() {
     var sampleSize = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : _defaults2.default.sampleSize;
@@ -354,8 +357,8 @@ var Sampler = function () {
       return [imageData.data[redIndex], imageData.data[greenIndex], imageData.data[blueIndex], imageData.data[alphaIndex] / 255];
     }
   }, {
-    key: 'getColorAverage',
-    value: function getColorAverage(x, y) {
+    key: 'getSampleAverageColor',
+    value: function getSampleAverageColor(x, y) {
       var width = this.sampleSize;
       var height = this.sampleSize;
 
@@ -368,6 +371,16 @@ var Sampler = function () {
         for (var w = 0; w < width; w++) {
           colors.push(this.getColorDataAtPoint(w, h, imageData));
         }
+      }
+      return _chromaJs2.default.average(colors).css();
+    }
+  }, {
+    key: 'getAverageOfColors',
+    value: function getAverageOfColors() {
+      var colors = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+
+      if (colors.length < 1) {
+        return null;
       }
       return _chromaJs2.default.average(colors).css();
     }
