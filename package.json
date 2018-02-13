@@ -6,8 +6,8 @@
   "license": "Apache-2.0",
   "private": true,
   "scripts": {
-    "build": "webpack --display-modules",
-    "watch": "webpack --watch --hide-modules"
+    "build": "webpack --display-modules && cpx './*.{html,css}' dist --clean",
+    "watch": "webpack --watch --hide-modules & cpx './*.{html,css}' dist --clean --watch"
   },
   "repository": {},
   "dependencies": {
@@ -18,6 +18,7 @@
     "babel-eslint": "^7.1.1",
     "babel-loader": "^6.2.10",
     "babel-preset-env": "^1.6.1",
+    "copy": "^0.3.1",
     "eslint": "^3.14.1",
     "eslint-config-squarespace": "^1.0.0",
     "webpack": "^3.10.0"
