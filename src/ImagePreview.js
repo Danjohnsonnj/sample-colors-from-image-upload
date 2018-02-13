@@ -66,15 +66,24 @@ class ImagePreview {
     const width = this.sampler.canvas.width - 1
     const height = this.sampler.canvas.height - 1
     const colors = []
+    const gradientCoords = []
     const length = this._samples - 1
     for (let h = 0; h <= length; h++) {
       for (let w = 0; w <= length; w++) {
         colors.push(this.sampler.getSampleAverageColor(
-          Math.floor(width * w / (this._samples - 1)),
-          Math.floor(height * h / (this._samples - 1))
+          Math.floor(width * w / length),
+          Math.floor(height * h / length)
         ))
+        gradientCoords.push(`${w / length * 100}% ${h / length * 100}%`)
       }
     }
+
+    let gradientString = ''
+    colors.forEach((c, x) => {
+      gradientString += `radial-gradient(circle at ${gradientCoords[x]}, ${colors[x]} 0, ${colors[x]} 20%, transparent 100%),`
+    })
+    gradientString = gradientString.slice(0, gradientString.lastIndexOf(','))
+    console.log(gradientString)
 
     this.swatchWrapper.style.backgroundColor = this.sampler.getAverageOfColors(colors)
     const imageRatio = this.sampler.getImageRatio()

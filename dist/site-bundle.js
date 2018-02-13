@@ -226,12 +226,21 @@ var ImagePreview = function () {
       var width = this.sampler.canvas.width - 1;
       var height = this.sampler.canvas.height - 1;
       var colors = [];
+      var gradientCoords = [];
       var length = this._samples - 1;
       for (var h = 0; h <= length; h++) {
         for (var w = 0; w <= length; w++) {
-          colors.push(this.sampler.getSampleAverageColor(Math.floor(width * w / (this._samples - 1)), Math.floor(height * h / (this._samples - 1))));
+          colors.push(this.sampler.getSampleAverageColor(Math.floor(width * w / length), Math.floor(height * h / length)));
+          gradientCoords.push(w / length * 100 + '% ' + h / length * 100 + '%');
         }
       }
+
+      var gradientString = '';
+      colors.forEach(function (c, x) {
+        gradientString += 'radial-gradient(circle at ' + gradientCoords[x] + ', ' + colors[x] + ' 0, ' + colors[x] + ' 20%, transparent 100%),';
+      });
+      gradientString = gradientString.slice(0, gradientString.lastIndexOf(','));
+      console.log(gradientString);
 
       this.swatchWrapper.style.backgroundColor = this.sampler.getAverageOfColors(colors);
       var imageRatio = this.sampler.getImageRatio();
