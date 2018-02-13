@@ -89,7 +89,12 @@ canvas.sampler {
   }
 
   .swatches.over {
+    transform: translate3d(0, -100%, 0);
+    opacity: 0 !important;
+  }
+  .swatches {
     opacity: 1 !important;
     transform: translate3d(0, -100%, 0);
+    transition: transform 0s ease-in-out, opacity 1s ease-in-out;
   }
 }
