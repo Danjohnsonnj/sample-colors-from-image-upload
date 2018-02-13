@@ -40,13 +40,11 @@ form {
 }
 
 .preview {
-  max-height: 90vh;
   flex: 0 0 50%;
   font-size: 0;
 }
 
 .swatches {
-  max-height: 90vh;
   flex: 0 0 50%;
   display: flex;
   transition: transform 0.2s ease-in-out;
