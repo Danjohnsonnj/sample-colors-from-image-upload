@@ -4,7 +4,7 @@ class ImagePreview {
   constructor(config) {
     this.sampler = new Sampler()
     const mergedConfig = Object.assign({
-      input: document.querySelector('input'),
+      input: document.querySelector('input[name="image_uploads"]'),
       preview: document.querySelector('.preview'),
       swatches: document.querySelector('.swatches'),
       progress: document.querySelector('.progress'),
