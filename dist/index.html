@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+  <body>
+
+    <form method="post" enctype="multipart/form-data">
+      <div class="controls">
+        <label for="samples">Samples: </label><input name="samples" type="range" min="2" max="32" step="1"><span name="samples"></span>
+
+        <label for="sampleSize">Sample Size: </label><input name="sampleSize" type="range" min="1" max="100" step="1"><span name="samples"></span>
+  
+        <input name="set" type="button" value="Set">
+      </div>
+
+      <div class="upload">
+        <label for="image_uploads">Choose an image to upload (PNG, JPG)</label>
+        <input type="file" id="image_uploads" name="image_uploads" accept=".jpg, .jpeg, .png">
+      </div>
+      <div class="preview">
+        <p>No files currently selected for upload</p>
+      </div>
+      <div class="swatches">
+      </div>
+    </form>
+
+    <script src="./site-bundle.js"></script>
+  </body>
+</html>
