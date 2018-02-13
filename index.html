@@ -14,9 +14,12 @@
   <body>
 
     <form method="post" enctype="multipart/form-data">
-      <input name="samples" type="range" min="2" max="200" step="1">
-      <input name="sampleSize" type="range" min="1" max="200" step="1">
-      <input name="set" type="button">
+      <label for="samples">Samples: </label><input name="samples" type="range" min="2" max="32" step="1"><span name="samples"></span>
+
+      <label for="sampleSize">Sample Size: </label><input name="sampleSize" type="range" min="1" max="100" step="1"><span name="samples"></span>
+
+      <input name="set" type="button" value="Set">
+
       <div class="upload">
         <label for="image_uploads">Choose images to upload (PNG, JPG)</label>
         <input type="file" id="image_uploads" name="image_uploads" accept=".jpg, .jpeg, .png">
