@@ -57,13 +57,17 @@ form {
   background-color: #aaa;
   text-align: center;
   color: #fff;
-  padding: 5px 0 5px 5px;
+  padding: 5px 0 5px 10px;
   box-sizing: border-box;
   margin-top: 10px;
 }
 
 .preview-label {
-  border-right: 2px solid #fff;
+  border-right: 1px solid #fff;
+}
+
+.sample-label {
+  border-left: 1px solid #fff;
 }
 
 .swatches > div {
