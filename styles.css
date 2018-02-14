@@ -50,6 +50,22 @@ form {
   transition: all 0.2s ease-in-out;
 }
 
+.preview-label,
+.sample-label {
+  display: flex;
+  flex: 0 0 50%;
+  background-color: #aaa;
+  text-align: center;
+  color: #fff;
+  padding: 5px 0 5px 5px;
+  box-sizing: border-box;
+  margin-top: 10px;
+}
+
+.preview-label {
+  border-right: 2px solid #fff;
+}
+
 .swatches > div {
   width: 100%;
   display: flex;
