@@ -13,11 +13,11 @@ document.addEventListener('DOMContentLoaded', () => {
   inputSamples.value = DEFAULTS.samples
   inputSampleSize.value = DEFAULTS.sampleSize
 
-  inputSamples.nextElementSibling.innerHTML = inputSamples.value
+  inputSamples.nextElementSibling.innerHTML = `${inputSamples.value} x ${inputSamples.value}`
   inputSampleSize.nextElementSibling.innerHTML = inputSampleSize.value
 
   inputSamples.addEventListener('change', evt => {
-    evt.currentTarget.nextElementSibling.innerHTML = evt.currentTarget.value
+    evt.currentTarget.nextElementSibling.innerHTML = `${evt.currentTarget.value} x ${evt.currentTarget.value}`
   })
 
   inputSampleSize.addEventListener('change', evt => {

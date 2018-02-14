@@ -74,7 +74,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = {
-  samples: 3, sampleSize: 50
+  samples: 3, sampleSize: 75
 };
 
 /***/ }),
@@ -113,11 +113,11 @@ document.addEventListener('DOMContentLoaded', function () {
   inputSamples.value = _defaults2.default.samples;
   inputSampleSize.value = _defaults2.default.sampleSize;
 
-  inputSamples.nextElementSibling.innerHTML = inputSamples.value;
+  inputSamples.nextElementSibling.innerHTML = inputSamples.value + ' x ' + inputSamples.value;
   inputSampleSize.nextElementSibling.innerHTML = inputSampleSize.value;
 
   inputSamples.addEventListener('change', function (evt) {
-    evt.currentTarget.nextElementSibling.innerHTML = evt.currentTarget.value;
+    evt.currentTarget.nextElementSibling.innerHTML = evt.currentTarget.value + ' x ' + evt.currentTarget.value;
   });
 
   inputSampleSize.addEventListener('change', function (evt) {
