@@ -48,6 +48,8 @@ class ImagePreview {
       this.preview.removeChild(this.preview.firstChild);
     }
     this.swatchWrapper.innerHTML = ''
+    this.swatchWrapper.style.backgroundColor = ''
+    this.swatchWrapper.style.backgroundImage = ''
     var curFile = this.input.files[0]
     let image = null
     if (this.validFileType(curFile)) {
@@ -80,11 +82,11 @@ class ImagePreview {
 
     let gradientString = ''
     colors.forEach((c, x) => {
-      gradientString += `radial-gradient(circle at ${gradientCoords[x]}, ${colors[x]} 0, ${colors[x]} 20%, transparent 100%),`
+      gradientString += `radial-gradient(circle at ${gradientCoords[x]}, ${colors[x]} 0%, transparent 50%),`
     })
     gradientString = gradientString.slice(0, gradientString.lastIndexOf(','))
     console.log(gradientString)
-
+    this.swatchWrapper.style.backgroundImage = gradientString
     this.swatchWrapper.style.backgroundColor = this.sampler.getAverageOfColors(colors)
     const imageRatio = this.sampler.getImageRatio()
     const wrap = document.createElement('div')

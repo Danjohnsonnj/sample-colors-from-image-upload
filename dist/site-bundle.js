@@ -205,6 +205,8 @@ var ImagePreview = function () {
         this.preview.removeChild(this.preview.firstChild);
       }
       this.swatchWrapper.innerHTML = '';
+      this.swatchWrapper.style.backgroundColor = '';
+      this.swatchWrapper.style.backgroundImage = '';
       var curFile = this.input.files[0];
       var image = null;
       if (this.validFileType(curFile)) {
@@ -237,11 +239,11 @@ var ImagePreview = function () {
 
       var gradientString = '';
       colors.forEach(function (c, x) {
-        gradientString += 'radial-gradient(circle at ' + gradientCoords[x] + ', ' + colors[x] + ' 0, ' + colors[x] + ' 20%, transparent 100%),';
+        gradientString += 'radial-gradient(circle at ' + gradientCoords[x] + ', ' + colors[x] + ' 0%, transparent 50%),';
       });
       gradientString = gradientString.slice(0, gradientString.lastIndexOf(','));
       console.log(gradientString);
-
+      this.swatchWrapper.style.backgroundImage = gradientString;
       this.swatchWrapper.style.backgroundColor = this.sampler.getAverageOfColors(colors);
       var imageRatio = this.sampler.getImageRatio();
       var wrap = document.createElement('div');

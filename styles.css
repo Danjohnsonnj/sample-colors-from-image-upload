@@ -47,13 +47,14 @@ form {
 .swatches {
   flex: 0 0 50%;
   display: flex;
-  transition: transform 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
 }
 
 .swatches > div {
   width: 100%;
   display: flex;
   flex-wrap: wrap;
+  transition: all 0.2s ease-in-out;
 }
 
 .swatches .tile {
@@ -71,12 +72,16 @@ canvas.sampler {
 }
 
 .swatches.over {
-  transform: translate3d(-100%, 0, 0);
-  transition: transform 0.5s ease-in-out, opacity 1s ease-in-out;
+  /* transform: translate3d(-100%, 0, 0);
+  transition: transform 0.5s ease-in-out, opacity 1s ease-in-out; */
+}
+
+.swatches.over > div{
+  opacity: 0;
 }
 
 .swatches.over:hover {
-  opacity: 0.1;
+  /* opacity: 0.1; */
 }
 
 @media all and (max-width: 800px) {
