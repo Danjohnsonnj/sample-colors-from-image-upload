@@ -26,7 +26,6 @@ input[type="button"] {
 .preview img {
   display: block;
   width: 100%;
-  max-height: 100%;
 }
 
 form {
@@ -91,27 +90,47 @@ canvas.sampler {
   visibility: hidden;
 }
 
-.swatches.over {
-  /* transform: translate3d(-100%, 0, 0);
-  transition: transform 0.5s ease-in-out, opacity 1s ease-in-out; */
-}
-
 .swatches.over > div{
   opacity: 0;
 }
 
-.swatches.over:hover {
-  /* opacity: 0.1; */
+.media-layout {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
 }
 
 @media all and (max-width: 800px) {
   .preview,
-  .swatches {
+  .swatches,
+  .preview-label,
+  .sample-label {
     flex: none;
     width: 100%;
   }
 
-  .swatches.over {
+  .media-layout {
+    display: grid;
+    grid-template-columns: 100%;
+  }
+
+  .preview-label {
+    grid-row: 1/2;
+  }
+
+  .sample-label {
+    grid-row: 3/4;
+  }
+
+  .preview {
+    grid-row: 2/3;
+  }
+
+  .swatches {
+    grid-row: 4/5;
+  }
+
+  /* .swatches.over {
     transform: translate3d(0, -100%, 0);
     opacity: 0 !important;
   }
@@ -119,5 +138,5 @@ canvas.sampler {
     opacity: 1 !important;
     transform: translate3d(0, -100%, 0);
     transition: transform 0s ease-in-out, opacity 1s ease-in-out;
-  }
+  } */
 }
