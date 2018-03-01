@@ -17,10 +17,15 @@ input[type="button"] {
   grid-column-end: 5;
 }
 
-input[type="button"] {
+input[type="button"][name="set"] {
   -webkit-appearance: button;
   font-size: 15px;
   padding: 1em 2em;
+  visibility: hidden;
+}
+
+input[type="button"][name="set"].changes {
+  visibility: visible;
 }
 
 .preview img {

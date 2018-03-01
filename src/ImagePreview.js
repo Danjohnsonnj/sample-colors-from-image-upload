@@ -7,14 +7,12 @@ class ImagePreview {
       input: document.querySelector('input[name="image_uploads"]'),
       preview: document.querySelector('.preview'),
       swatches: document.querySelector('.swatches'),
-      progress: document.querySelector('.progress'),
       samples: 3,
       sampleSize: 50
     }, config)
     this.input = mergedConfig.input
     this.preview = mergedConfig.preview
     this.swatchWrapper = mergedConfig.swatches
-    this.progress = mergedConfig.progress
     this.samples = mergedConfig.samples
     this.sampleSize = mergedConfig.sampleSize
     this.fileTypes = [
@@ -34,6 +32,9 @@ class ImagePreview {
   }
 
   validFileType(file) {
+    if (!file) {
+      return false
+    }
     for (var i = 0; i < this.fileTypes.length; i++) {
       if (file.type === this.fileTypes[i]) {
         return true;
@@ -44,24 +45,25 @@ class ImagePreview {
   }
 
   updateImageDisplay() {
+    var curFile = this.input.files[0]
+    if (!this.validFileType(curFile)) {
+      return false
+    }
     while (this.preview.firstChild) {
       this.preview.removeChild(this.preview.firstChild);
     }
     this.swatchWrapper.innerHTML = ''
     this.swatchWrapper.style.backgroundColor = ''
     this.swatchWrapper.style.backgroundImage = ''
-    var curFile = this.input.files[0]
     let image = null
-    if (this.validFileType(curFile)) {
-      image = document.createElement('img')
-      image.addEventListener('load', () => {
-        this.sampler.drawImageToCanvas(image)
-        this.showSwatches(image)
-      })
-      image.src = window.URL.createObjectURL(curFile)
+    image = document.createElement('img')
+    image.addEventListener('load', () => {
+      this.sampler.drawImageToCanvas(image)
+      this.showSwatches(image)
+    })
+    image.src = window.URL.createObjectURL(curFile)
 
-      this.preview.appendChild(image)
-    }
+    this.preview.appendChild(image)
   }
 
   showSwatches(image) {
