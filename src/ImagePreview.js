@@ -76,7 +76,6 @@ class ImagePreview {
           Math.floor(width * w / length),
           Math.floor(height * h / length)
         ))
-        // gradientCoords.push(`${w / length * 100}% ${h / length * 100}%`)
         gradientCoords.push(`${(w * 100 / this._samples) + (100 / this._samples / 2)}%
           ${(h * 100 / this._samples) + (100 / this._samples / 2)}%`)
         // console.log(gradientCoords[gradientCoords.length - 1])
@@ -88,7 +87,6 @@ class ImagePreview {
     colors.forEach((c, x) => {
       gradientString += `radial-gradient(circle at ${gradientCoords[x]}, ${colors[x]} 0%,
         ${this.sampler.chroma(colors[x]).alpha(0).css()} ${vanishingPoint}%),`
-      // gradientString += `radial-gradient(circle at ${gradientCoords[x]}, ${colors[x]} 0%, transparent 50%),`
     })
     gradientString = gradientString.slice(0, gradientString.lastIndexOf(','))
     // console.log(gradientString)
@@ -96,25 +94,15 @@ class ImagePreview {
     this.swatchWrapper.style.backgroundColor = this.sampler.getAverageOfColors(colors)
     const imageRatio = this.sampler.getImageRatio()
     const wrap = document.createElement('div')
+    wrap.style.gridTemplateColumns = `repeat(${this._samples}, 1fr)`
     colors.forEach((c) => {
       const tile = document.createElement('div')
       tile.classList.add('tile')
       tile.style.backgroundColor = c
-      tile.style.flexBasis = `${100 / this._samples}%`
       tile.style.paddingBottom = `calc(${100 / this._samples}% * ${imageRatio})`
       wrap.appendChild(tile)
     })
     this.swatchWrapper.appendChild(wrap)
-  }
-
-  returnFileSize(number) {
-    if (number < 1024) {
-      return number + 'bytes';
-    } else if (number > 1024 && number < 1048576) {
-      return (number / 1024).toFixed(1) + 'KB';
-    } else if (number > 1048576) {
-      return (number / 1048576).toFixed(1) + 'MB';
-    }
   }
 
   set samples(num) {

@@ -71,13 +71,11 @@ form {
 
 .swatches > div {
   width: 100%;
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
   transition: all 0.2s ease-in-out;
 }
 
 .swatches .tile {
-  flex: 1 1 33%;
   padding-bottom: 33%;
 }
 
