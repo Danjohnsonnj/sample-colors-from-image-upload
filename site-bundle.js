@@ -118,14 +118,23 @@ document.addEventListener('DOMContentLoaded', function () {
 
   inputSamples.addEventListener('change', function (evt) {
     evt.currentTarget.nextElementSibling.innerHTML = evt.currentTarget.value + ' x ' + evt.currentTarget.value;
+    window.previewer.samples = evt.currentTarget.value;
+    if (window.previewer.preview.firstElementChild) {
+      buttonSet.classList.add('changes');
+    }
   });
 
   inputSampleSize.addEventListener('change', function (evt) {
     evt.currentTarget.nextElementSibling.innerHTML = evt.currentTarget.value;
+    window.previewer.sampleSize = evt.currentTarget.value;
+    if (window.previewer.preview.firstElementChild) {
+      buttonSet.classList.add('changes');
+    }
   });
 
   buttonSet.addEventListener('click', function (evt) {
     evt.preventDefault();
+    evt.currentTarget.classList.remove('changes');
     window.previewer.samples = inputSamples.value;
     window.previewer.sampleSize = inputSampleSize.value;
     window.previewer.updateImageDisplay();
@@ -162,14 +171,12 @@ var ImagePreview = function () {
       input: document.querySelector('input[name="image_uploads"]'),
       preview: document.querySelector('.preview'),
       swatches: document.querySelector('.swatches'),
-      progress: document.querySelector('.progress'),
       samples: 3,
       sampleSize: 50
     }, config);
     this.input = mergedConfig.input;
     this.preview = mergedConfig.preview;
     this.swatchWrapper = mergedConfig.swatches;
-    this.progress = mergedConfig.progress;
     this.samples = mergedConfig.samples;
     this.sampleSize = mergedConfig.sampleSize;
     this.fileTypes = ['image/jpeg', 'image/pjpeg', 'image/png'];
@@ -188,6 +195,9 @@ var ImagePreview = function () {
   }, {
     key: 'validFileType',
     value: function validFileType(file) {
+      if (!file) {
+        return false;
+      }
       for (var i = 0; i < this.fileTypes.length; i++) {
         if (file.type === this.fileTypes[i]) {
           return true;
@@ -201,24 +211,25 @@ var ImagePreview = function () {
     value: function updateImageDisplay() {
       var _this = this;
 
+      var curFile = this.input.files[0];
+      if (!this.validFileType(curFile)) {
+        return false;
+      }
       while (this.preview.firstChild) {
         this.preview.removeChild(this.preview.firstChild);
       }
       this.swatchWrapper.innerHTML = '';
       this.swatchWrapper.style.backgroundColor = '';
       this.swatchWrapper.style.backgroundImage = '';
-      var curFile = this.input.files[0];
       var image = null;
-      if (this.validFileType(curFile)) {
-        image = document.createElement('img');
-        image.addEventListener('load', function () {
-          _this.sampler.drawImageToCanvas(image);
-          _this.showSwatches(image);
-        });
-        image.src = window.URL.createObjectURL(curFile);
+      image = document.createElement('img');
+      image.addEventListener('load', function () {
+        _this.sampler.drawImageToCanvas(image);
+        _this.showSwatches(image);
+      });
+      image.src = window.URL.createObjectURL(curFile);
 
-        this.preview.appendChild(image);
-      }
+      this.preview.appendChild(image);
     }
   }, {
     key: 'showSwatches',
