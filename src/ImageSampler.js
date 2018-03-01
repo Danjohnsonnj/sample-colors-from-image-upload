@@ -1,6 +1,5 @@
 import DEFAULTS from './defaults.js'
 import chroma from 'chroma-js'
-window.chroma = chroma
 
 class Sampler {
   constructor(sampleSize = DEFAULTS.sampleSize, samples = DEFAULTS.samples) {
@@ -8,6 +7,7 @@ class Sampler {
     this.ctx = this.canvas.getContext('2d')
     this.sampleSize = sampleSize
     this.samples = samples
+    this.chroma = chroma
   }
 
   getCleanCanvas() {
@@ -38,8 +38,8 @@ class Sampler {
   }
 
   getColorDataAtPoint(x, y, imageData) {
-    const red = y * (imageData.width * 4) + x * 4
-    const [redIndex, greenIndex, blueIndex, alphaIndex] = [red, red + 1, red + 2, red + 3]
+    const index = y * (imageData.width * 4) + x * 4
+    const [redIndex, greenIndex, blueIndex, alphaIndex] = [index, index + 1, index + 2, index + 3]
     return [imageData.data[redIndex],
       imageData.data[greenIndex],
       imageData.data[blueIndex],
@@ -61,7 +61,7 @@ class Sampler {
         colors.push(this.getColorDataAtPoint(w, h, imageData))
       }
     }
-    return chroma.average(colors).css()
+    return chroma.average(colors, 'rgb').css()
   }
 
   getAverageOfColors(colors = []) {

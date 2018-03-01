@@ -233,16 +233,20 @@ var ImagePreview = function () {
       for (var h = 0; h <= length; h++) {
         for (var w = 0; w <= length; w++) {
           colors.push(this.sampler.getSampleAverageColor(Math.floor(width * w / length), Math.floor(height * h / length)));
-          gradientCoords.push(w / length * 100 + '% ' + h / length * 100 + '%');
+          // gradientCoords.push(`${w / length * 100}% ${h / length * 100}%`)
+          gradientCoords.push(w * 100 / this._samples + 100 / this._samples / 2 + '%\n          ' + (h * 100 / this._samples + 100 / this._samples / 2) + '%');
+          // console.log(gradientCoords[gradientCoords.length - 1])
         }
       }
 
       var gradientString = '';
+      var vanishingPoint = Math.floor(100 / this._samples) * 1.1;
       colors.forEach(function (c, x) {
-        gradientString += 'radial-gradient(circle at ' + gradientCoords[x] + ', ' + colors[x] + ' 0%, transparent 50%),';
+        gradientString += 'radial-gradient(circle at ' + gradientCoords[x] + ', ' + colors[x] + ' 0%,\n        ' + _this2.sampler.chroma(colors[x]).alpha(0).css() + ' ' + vanishingPoint + '%),';
+        // gradientString += `radial-gradient(circle at ${gradientCoords[x]}, ${colors[x]} 0%, transparent 50%),`
       });
       gradientString = gradientString.slice(0, gradientString.lastIndexOf(','));
-      console.log(gradientString);
+      // console.log(gradientString)
       this.swatchWrapper.style.backgroundImage = gradientString;
       this.swatchWrapper.style.backgroundColor = this.sampler.getAverageOfColors(colors);
       var imageRatio = this.sampler.getImageRatio();
@@ -315,8 +319,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-window.chroma = _chromaJs2.default;
-
 var Sampler = function () {
   function Sampler() {
     var sampleSize = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : _defaults2.default.sampleSize;
@@ -328,6 +330,7 @@ var Sampler = function () {
     this.ctx = this.canvas.getContext('2d');
     this.sampleSize = sampleSize;
     this.samples = samples;
+    this.chroma = _chromaJs2.default;
   }
 
   _createClass(Sampler, [{
@@ -359,11 +362,11 @@ var Sampler = function () {
   }, {
     key: 'getColorDataAtPoint',
     value: function getColorDataAtPoint(x, y, imageData) {
-      var red = y * (imageData.width * 4) + x * 4;
-      var redIndex = red,
-          greenIndex = red + 1,
-          blueIndex = red + 2,
-          alphaIndex = red + 3;
+      var index = y * (imageData.width * 4) + x * 4;
+      var redIndex = index,
+          greenIndex = index + 1,
+          blueIndex = index + 2,
+          alphaIndex = index + 3;
 
       return [imageData.data[redIndex], imageData.data[greenIndex], imageData.data[blueIndex], imageData.data[alphaIndex] / 255];
     }
@@ -383,7 +386,7 @@ var Sampler = function () {
           colors.push(this.getColorDataAtPoint(w, h, imageData));
         }
       }
-      return _chromaJs2.default.average(colors).css();
+      return _chromaJs2.default.average(colors, 'rgb').css();
     }
   }, {
     key: 'getAverageOfColors',
