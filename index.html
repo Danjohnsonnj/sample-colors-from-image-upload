@@ -15,11 +15,11 @@
 
     <form method="post" enctype="multipart/form-data">
       <div class="controls">
-        <label for="samples">Samples: </label><input name="samples" type="range" min="2" max="32" step="1"><span></span>
+        <label for="samples">Samples: </label><input name="samples" type="range" min="2" max="10" step="1"><span></span>
 
         <label for="sampleSize">Sample Size: </label><input name="sampleSize" type="range" min="1" max="100" step="1"><span></span>
   
-        <input name="set" type="button" value="Set">
+        <input name="set" type="button" value="Redraw">
       </div>
 
       <div class="upload">
@@ -29,9 +29,7 @@
       <div class="media-layout">
         <div class="preview-label">Original Image</div>
         <div class="sample-label">Sampled result (click to toggle gradient view)</div>
-        <div class="preview">
-          <p>No files currently selected for upload</p>
-        </div>
+        <div class="preview"></div>
         <div class="swatches"></div>
       </div>
     </form>
