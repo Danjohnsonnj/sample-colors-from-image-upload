@@ -233,7 +233,6 @@ var ImagePreview = function () {
       for (var h = 0; h <= length; h++) {
         for (var w = 0; w <= length; w++) {
           colors.push(this.sampler.getSampleAverageColor(Math.floor(width * w / length), Math.floor(height * h / length)));
-          // gradientCoords.push(`${w / length * 100}% ${h / length * 100}%`)
           gradientCoords.push(w * 100 / this._samples + 100 / this._samples / 2 + '%\n          ' + (h * 100 / this._samples + 100 / this._samples / 2) + '%');
           // console.log(gradientCoords[gradientCoords.length - 1])
         }
@@ -243,7 +242,6 @@ var ImagePreview = function () {
       var vanishingPoint = Math.floor(100 / this._samples) * 1.1;
       colors.forEach(function (c, x) {
         gradientString += 'radial-gradient(circle at ' + gradientCoords[x] + ', ' + colors[x] + ' 0%,\n        ' + _this2.sampler.chroma(colors[x]).alpha(0).css() + ' ' + vanishingPoint + '%),';
-        // gradientString += `radial-gradient(circle at ${gradientCoords[x]}, ${colors[x]} 0%, transparent 50%),`
       });
       gradientString = gradientString.slice(0, gradientString.lastIndexOf(','));
       // console.log(gradientString)
@@ -251,26 +249,15 @@ var ImagePreview = function () {
       this.swatchWrapper.style.backgroundColor = this.sampler.getAverageOfColors(colors);
       var imageRatio = this.sampler.getImageRatio();
       var wrap = document.createElement('div');
+      wrap.style.gridTemplateColumns = 'repeat(' + this._samples + ', 1fr)';
       colors.forEach(function (c) {
         var tile = document.createElement('div');
         tile.classList.add('tile');
         tile.style.backgroundColor = c;
-        tile.style.flexBasis = 100 / _this2._samples + '%';
         tile.style.paddingBottom = 'calc(' + 100 / _this2._samples + '% * ' + imageRatio + ')';
         wrap.appendChild(tile);
       });
       this.swatchWrapper.appendChild(wrap);
-    }
-  }, {
-    key: 'returnFileSize',
-    value: function returnFileSize(number) {
-      if (number < 1024) {
-        return number + 'bytes';
-      } else if (number > 1024 && number < 1048576) {
-        return (number / 1024).toFixed(1) + 'KB';
-      } else if (number > 1048576) {
-        return (number / 1048576).toFixed(1) + 'MB';
-      }
     }
   }, {
     key: 'samples',
