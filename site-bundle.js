@@ -255,7 +255,7 @@ var ImagePreview = function () {
       }
 
       var gradientString = '';
-      var vanishingPoint = Math.floor(100 / this._samples) * 1.1;
+      var vanishingPoint = Math.floor(100 / this._samples) * 1.2;
       colors.forEach(function (c, x) {
         gradientString += 'radial-gradient(circle at ' + gradientCoords[x] + ', ' + colors[x] + ' 0%,\n        ' + _this2.sampler.chroma(colors[x]).alpha(0).css() + ' ' + vanishingPoint + '%),';
       });
