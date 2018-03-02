@@ -85,7 +85,7 @@ class ImagePreview {
     }
 
     let gradientString = ''
-    const vanishingPoint = Math.floor(100 / this._samples) * 1.1
+    const vanishingPoint = Math.floor(100 / this._samples) * 1.2
     colors.forEach((c, x) => {
       gradientString += `radial-gradient(circle at ${gradientCoords[x]}, ${colors[x]} 0%,
         ${this.sampler.chroma(colors[x]).alpha(0).css()} ${vanishingPoint}%),`
