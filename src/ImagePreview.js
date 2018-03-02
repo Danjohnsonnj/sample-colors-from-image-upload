@@ -96,11 +96,11 @@ class ImagePreview {
     this.swatchWrapper.style.backgroundColor = this.sampler.getAverageOfColors(colors)
     const imageRatio = this.sampler.getImageRatio()
     const wrap = document.createElement('div')
-    wrap.style.gridTemplateColumns = `repeat(${this._samples}, 1fr)`
     colors.forEach((c) => {
       const tile = document.createElement('div')
       tile.classList.add('tile')
       tile.style.backgroundColor = c
+      tile.style.flexBasis = `${100 / this._samples}%`
       tile.style.paddingBottom = `calc(${100 / this._samples}% * ${imageRatio})`
       wrap.appendChild(tile)
     })

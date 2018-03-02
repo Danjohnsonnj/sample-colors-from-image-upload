@@ -1,6 +1,11 @@
 import DEFAULTS from './defaults'
 import ImagePreview from './ImagePreview'
 
+// Bust the GH Pages cache
+if (document.location.search.indexOf('rand') < 1) {
+  document.location.href = `${document.location.href.split('?')[0]}?rand=${Date.now()}`
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   window.previewer = new ImagePreview({
     samples: DEFAULTS.samples,
