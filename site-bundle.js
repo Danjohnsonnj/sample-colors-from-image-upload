@@ -101,6 +101,11 @@ var _ImagePreview2 = _interopRequireDefault(_ImagePreview);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+// Bust the GH Pages cache
+if (document.location.search.indexOf('rand') < 1) {
+  document.location.href = document.location.href.split('?')[0] + '?rand=' + Date.now();
+}
+
 document.addEventListener('DOMContentLoaded', function () {
   window.previewer = new _ImagePreview2.default({
     samples: _defaults2.default.samples,
@@ -260,11 +265,11 @@ var ImagePreview = function () {
       this.swatchWrapper.style.backgroundColor = this.sampler.getAverageOfColors(colors);
       var imageRatio = this.sampler.getImageRatio();
       var wrap = document.createElement('div');
-      wrap.style.gridTemplateColumns = 'repeat(' + this._samples + ', 1fr)';
       colors.forEach(function (c) {
         var tile = document.createElement('div');
         tile.classList.add('tile');
         tile.style.backgroundColor = c;
+        tile.style.flexBasis = 100 / _this2._samples + '%';
         tile.style.paddingBottom = 'calc(' + 100 / _this2._samples + '% * ' + imageRatio + ')';
         wrap.appendChild(tile);
       });

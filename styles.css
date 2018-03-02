@@ -76,7 +76,8 @@ form {
 
 .swatches > div {
   width: 100%;
-  display: grid;
+  display: flex;
+  flex-wrap: wrap;
   transition: all 0.2s ease-in-out;
 }
 
