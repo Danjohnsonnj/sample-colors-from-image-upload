@@ -67,43 +67,53 @@ class ImagePreview {
   }
 
   showSwatches(image) {
+    const sampleSize = this._samples
     const width = this.sampler.canvas.width - 1
     const height = this.sampler.canvas.height - 1
     const colors = []
     const gradientCoords = []
-    const length = this._samples - 1
+    const length = sampleSize - 1
     for (let h = 0; h <= length; h++) {
       for (let w = 0; w <= length; w++) {
         colors.push(this.sampler.getSampleAverageColor(
           Math.floor(width * w / length),
           Math.floor(height * h / length)
         ))
-        gradientCoords.push(`${(w * 100 / this._samples) + (100 / this._samples / 2)}%
-          ${(h * 100 / this._samples) + (100 / this._samples / 2)}%`)
+        gradientCoords.push(`${(w * 100 / sampleSize) + (100 / sampleSize / 2)}%
+          ${(h * 100 / sampleSize) + (100 / sampleSize / 2)}%`)
         // console.log(gradientCoords[gradientCoords.length - 1])
       }
     }
 
-    let gradientString = ''
-    const vanishingPoint = Math.floor(100 / this._samples) * 1.2
-    colors.forEach((c, x) => {
-      gradientString += `radial-gradient(circle at ${gradientCoords[x]}, ${colors[x]} 0%,
-        ${this.sampler.chroma(colors[x]).alpha(0).css()} ${vanishingPoint}%),`
-    })
-    gradientString = gradientString.slice(0, gradientString.lastIndexOf(','))
-    // console.log(gradientString)
-    this.swatchWrapper.style.backgroundImage = gradientString
-    this.swatchWrapper.style.backgroundColor = this.sampler.getAverageOfColors(colors)
+    let gradientArray = []
+    const vanishingPoint = Math.floor(100 / sampleSize) * 1.2
     const imageRatio = this.sampler.getImageRatio()
     const wrap = document.createElement('div')
-    colors.forEach((c) => {
+    colors.forEach((c, x) => {
       const tile = document.createElement('div')
       tile.classList.add('tile')
       tile.style.backgroundColor = c
-      tile.style.flexBasis = `${100 / this._samples}%`
-      tile.style.paddingBottom = `calc(${100 / this._samples}% * ${imageRatio})`
+      tile.style.flexBasis = `${100 / sampleSize}%`
+      tile.style.paddingBottom = `calc(${100 / sampleSize}% * ${imageRatio})`
       wrap.appendChild(tile)
+
+      gradientArray.push(`radial-gradient(circle at ${gradientCoords[x]}, ${colors[x]} 0%,
+        ${this.sampler.chroma(colors[x]).alpha(0).css()} ${vanishingPoint}%)`)
     })
+
+    const gMid = Math.floor(gradientArray.length / 2)
+    const gRange = Math.floor(Math.sqrt(gradientArray.length) / 2)
+    const acc = []
+    gradientArray.forEach((i, d, a) => {
+      if (Math.abs(d - gMid) < gRange) {
+        acc.unshift(a.slice(d, d + 1)[0])
+      } else {
+        acc.push(i)
+      }
+    })
+    const gradientString = acc.join()
+    this.swatchWrapper.style.backgroundImage = gradientString
+    this.swatchWrapper.style.backgroundColor = this.sampler.getAverageOfColors(colors)
     this.swatchWrapper.appendChild(wrap)
   }
 
