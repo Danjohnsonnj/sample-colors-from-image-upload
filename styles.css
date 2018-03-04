@@ -4,10 +4,14 @@ body {
 
 .controls {
   display: grid;
-  grid-template-columns: 1fr 5fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
   grid-row-gap: 10px;
   grid-column-gap: 10px;
   margin-bottom: 20px;
+}
+
+.controls * {
+  white-space: nowrap;
 }
 
 input[type="button"] {
@@ -20,7 +24,6 @@ input[type="button"] {
 input[type="button"][name="set"] {
   -webkit-appearance: button;
   font-size: 15px;
-  padding: 1em 2em;
   visibility: hidden;
 }
 

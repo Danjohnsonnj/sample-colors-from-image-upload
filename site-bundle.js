@@ -241,38 +241,48 @@ var ImagePreview = function () {
     value: function showSwatches(image) {
       var _this2 = this;
 
+      var sampleSize = this._samples;
       var width = this.sampler.canvas.width - 1;
       var height = this.sampler.canvas.height - 1;
       var colors = [];
       var gradientCoords = [];
-      var length = this._samples - 1;
+      var length = sampleSize - 1;
       for (var h = 0; h <= length; h++) {
         for (var w = 0; w <= length; w++) {
           colors.push(this.sampler.getSampleAverageColor(Math.floor(width * w / length), Math.floor(height * h / length)));
-          gradientCoords.push(w * 100 / this._samples + 100 / this._samples / 2 + '%\n          ' + (h * 100 / this._samples + 100 / this._samples / 2) + '%');
+          gradientCoords.push(w * 100 / sampleSize + 100 / sampleSize / 2 + '%\n          ' + (h * 100 / sampleSize + 100 / sampleSize / 2) + '%');
           // console.log(gradientCoords[gradientCoords.length - 1])
         }
       }
 
-      var gradientString = '';
-      var vanishingPoint = Math.floor(100 / this._samples) * 1.2;
-      colors.forEach(function (c, x) {
-        gradientString += 'radial-gradient(circle at ' + gradientCoords[x] + ', ' + colors[x] + ' 0%,\n        ' + _this2.sampler.chroma(colors[x]).alpha(0).css() + ' ' + vanishingPoint + '%),';
-      });
-      gradientString = gradientString.slice(0, gradientString.lastIndexOf(','));
-      // console.log(gradientString)
-      this.swatchWrapper.style.backgroundImage = gradientString;
-      this.swatchWrapper.style.backgroundColor = this.sampler.getAverageOfColors(colors);
+      var gradientArray = [];
+      var vanishingPoint = Math.floor(100 / sampleSize) * 1.2;
       var imageRatio = this.sampler.getImageRatio();
       var wrap = document.createElement('div');
-      colors.forEach(function (c) {
+      colors.forEach(function (c, x) {
         var tile = document.createElement('div');
         tile.classList.add('tile');
         tile.style.backgroundColor = c;
-        tile.style.flexBasis = 100 / _this2._samples + '%';
-        tile.style.paddingBottom = 'calc(' + 100 / _this2._samples + '% * ' + imageRatio + ')';
+        tile.style.flexBasis = 100 / sampleSize + '%';
+        tile.style.paddingBottom = 'calc(' + 100 / sampleSize + '% * ' + imageRatio + ')';
         wrap.appendChild(tile);
+
+        gradientArray.push('radial-gradient(circle at ' + gradientCoords[x] + ', ' + colors[x] + ' 0%,\n        ' + _this2.sampler.chroma(colors[x]).alpha(0).css() + ' ' + vanishingPoint + '%)');
       });
+
+      var gMid = Math.floor(gradientArray.length / 2);
+      var gRange = Math.floor(Math.sqrt(gradientArray.length) / 2);
+      var acc = [];
+      gradientArray.forEach(function (i, d, a) {
+        if (Math.abs(d - gMid) < gRange) {
+          acc.unshift(a.slice(d, d + 1)[0]);
+        } else {
+          acc.push(i);
+        }
+      });
+      var gradientString = acc.join();
+      this.swatchWrapper.style.backgroundImage = gradientString;
+      this.swatchWrapper.style.backgroundColor = this.sampler.getAverageOfColors(colors);
       this.swatchWrapper.appendChild(wrap);
     }
   }, {
