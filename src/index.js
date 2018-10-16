@@ -9,7 +9,7 @@ if (document.location.search.indexOf('rand') < 1) {
 document.addEventListener('DOMContentLoaded', () => {
   window.previewer = new ImagePreview({
     samples: DEFAULTS.samples,
-    sampleSize: DEFAULTS.sampleSize
+    sampleSize: DEFAULTS.sampleSize,
   })
 
   const inputSamples = document.querySelector('input[name="samples"]')

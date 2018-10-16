@@ -1,3 +1,3 @@
 export default {
-  samples: 3, sampleSize: 33
+  samples: 3, sampleSize: 33,
 }

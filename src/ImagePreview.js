@@ -8,7 +8,7 @@ class ImagePreview {
       preview: document.querySelector('.preview'),
       swatches: document.querySelector('.swatches'),
       samples: 3,
-      sampleSize: 50
+      sampleSize: 50,
     }, config)
     this.input = mergedConfig.input
     this.preview = mergedConfig.preview
@@ -18,7 +18,7 @@ class ImagePreview {
     this.fileTypes = [
       'image/jpeg',
       'image/pjpeg',
-      'image/png'
+      'image/png',
     ]
 
     this.bindListeners()
@@ -37,11 +37,11 @@ class ImagePreview {
     }
     for (var i = 0; i < this.fileTypes.length; i++) {
       if (file.type === this.fileTypes[i]) {
-        return true;
+        return true
       }
     }
 
-    return false;
+    return false
   }
 
   updateImageDisplay() {
@@ -50,7 +50,7 @@ class ImagePreview {
       return false
     }
     while (this.preview.firstChild) {
-      this.preview.removeChild(this.preview.firstChild);
+      this.preview.removeChild(this.preview.firstChild)
     }
     this.swatchWrapper.innerHTML = ''
     this.swatchWrapper.style.backgroundColor = ''

@@ -22,7 +22,7 @@ class Sampler {
   }
 
   clearCanvas() {
-    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
   }
 
   drawImageToCanvas(img) {
@@ -39,11 +39,11 @@ class Sampler {
 
   getColorDataAtPoint(x, y, imageData) {
     const index = y * (imageData.width * 4) + x * 4
-    const [redIndex, greenIndex, blueIndex, alphaIndex] = [index, index + 1, index + 2, index + 3]
+    const [redIndex, greenIndex, blueIndex, alphaIndex,] = [index, index + 1, index + 2, index + 3,]
     return [imageData.data[redIndex],
       imageData.data[greenIndex],
       imageData.data[blueIndex],
-      imageData.data[alphaIndex] / 255
+      imageData.data[alphaIndex] / 255,
     ]
   }
 
