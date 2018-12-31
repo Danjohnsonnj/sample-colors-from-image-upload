@@ -88,10 +88,9 @@ form {
 }
 
 .swatches > div {
-  --blurOffset: calc(var(--blurAmount) / -2);
-  width: calc(100% + var(--blurAmount));
-  height: calc(100% + var(--blurAmount));
-  transform: translate3d(var(--blurOffset), var(--blurOffset), 0);
+  width: 100%;
+  height: 100%;
+  transform: scale(1.2);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
