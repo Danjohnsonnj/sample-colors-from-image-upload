@@ -77,12 +77,28 @@ form {
   border-left: 1px solid #fff;
 }
 
-.swatches > div {
-  width: 100%;
-  display: flex;
-  flex-wrap: wrap;
-  transition: all 0.2s ease-in-out;
+/* COLOR STOP AND BLUR STUFF */
+.controls > *:not([type="button"]):first-of-type {
+  visibility: hidden;
 }
+
+.swatches {
+  overflow: hidden;
+  display: block;
+}
+
+.swatches > div {
+  --blurOffset: calc(var(--blurAmount) / -2);
+  width: calc(100% + var(--blurAmount));
+  height: calc(100% + var(--blurAmount));
+  transform: translate3d(var(--blurOffset), var(--blurOffset), 0);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: all 0.2s ease-in-out;
+  filter: blur(var(--blurAmount));
+}
+/* end */
 
 .swatches .tile {
   padding-bottom: 33%;
