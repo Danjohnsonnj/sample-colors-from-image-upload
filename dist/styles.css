@@ -98,6 +98,7 @@ form {
   transition: all 0.2s ease-in-out;
   filter: blur(var(--blurAmount));
 }
+/* end */
 
 .swatches .tile {
   padding-bottom: 33%;
