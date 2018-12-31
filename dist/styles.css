@@ -77,11 +77,21 @@ form {
   border-left: 1px solid #fff;
 }
 
+.swatches {
+  overflow: hidden;
+  display: block;
+}
+
 .swatches > div {
-  width: 100%;
+  --blurOffset: calc(var(--blurAmount) / -2);
+  width: calc(100% + var(--blurAmount));
+  height: calc(100% + var(--blurAmount));
+  transform: translate3d(var(--blurOffset), var(--blurOffset), 0);
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
+  justify-content: space-between;
   transition: all 0.2s ease-in-out;
+  filter: blur(var(--blurAmount));
 }
 
 .swatches .tile {

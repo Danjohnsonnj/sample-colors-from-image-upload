@@ -60,15 +60,64 @@ class ImagePreview {
     image.addEventListener('load', () => {
       this.sampler.drawImageToCanvas(image)
       const colors = this.getColors()
-      const gradientCoords = this.getGradientCoords()
-      const gradientString = this.getGradientString({ colors, gradientCoords, })
-      const swatches = this.buildSwatches({ colors, gradientString, })
-      console.log(colors, gradientString, swatches)
-      this.swatchWrapper.appendChild(swatches)
+      // const gradientCoords = this.getGradientCoords()
+      // const gradientString = this.getGradientString({ colors, gradientCoords, })
+      // const swatches = this.buildSwatches({ colors, gradientString, })
+      console.table(colors)
+      // console.table(gradientCoords)
+      // console.info(gradientString)
+      // console.info(swatches)
+      // this.swatchWrapper.appendChild(swatches)
+      this.swatchWrapper.appendChild(this.gradientStyles(colors))
     })
     image.src = window.URL.createObjectURL(curFile)
 
     this.preview.appendChild(image)
+  }
+
+  gradientStyles(colors) {
+    const rows = ['before', null, 'after',]
+    const numPerRow = Math.sqrt(colors.length)
+    this.swatchWrapper.innerHTML = ''
+    const style = document.createElement('style')
+    const inner = document.createElement('div')
+    this.swatchWrapper.appendChild(style)
+    let css = `
+      .swatches {
+        --blurAmount: 6vw;
+        background-color: ${ this.sampler.getAverageOfColors(colors) };
+      }
+      .swatches > div::before,
+      .swatches > div::after {
+        content: '';
+        display: block;
+        width: 100%;
+        height: calc(100% / ${ numPerRow });
+      }
+    `
+    rows.forEach((item, index) => {
+      const rowColors = []
+      css += item ? `.swatches > div::${ item } {` : '.swatches > div {'
+      for (let ii = 0; ii < numPerRow; ii++) {
+        rowColors.push(colors[index * 3 + ii])
+        console.log(colors[index * 3 + ii])
+      }
+      css += `
+        background-image: linear-gradient(
+          to right,
+          ${ rowColors[0] } 0%,
+          ${ rowColors[0] } 33%,
+          ${ rowColors[1] } 33%,
+          ${ rowColors[1] } 67%,
+          ${ rowColors[2] } 67%,
+          ${ rowColors[2] } 100%
+        );
+      `
+      css += '}'
+    })
+
+    style.innerHTML = css
+    return inner
   }
 
   getColors() {
