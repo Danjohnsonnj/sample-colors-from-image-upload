@@ -77,6 +77,11 @@ form {
   border-left: 1px solid #fff;
 }
 
+/* COLOR STOP AND BLUR STUFF */
+.controls > *:not([type="button"]):first-of-type {
+  visibility: hidden;
+}
+
 .swatches {
   overflow: hidden;
   display: block;
